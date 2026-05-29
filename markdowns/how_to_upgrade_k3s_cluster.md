@@ -103,6 +103,10 @@ disable:
   - traefik
   - servicelb
 node-name: hostinger1-staging-cluster
+
+etcd-snapshot-schedule-cron: "0 */6 * * *" 
+etcd-snapshot-retention: 10 
+etcd-snapshot-dir: /var/lib/rancher/k3s/server/db/snapshots
 ```
 ### IMPORTANT
 - This file is automatically used by K3s on restart
