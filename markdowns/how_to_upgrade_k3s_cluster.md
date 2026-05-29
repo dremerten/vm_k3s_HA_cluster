@@ -48,6 +48,9 @@ kubectl -n kube-system get pods -o wide
 ## Existing snapshots
 ```
 sudo k3s etcd-snapshot ls
+
+# human readable size
+sudo ls -lh /var/lib/rancher/k3s/server/db/snapshots/
 ```
 
 ## Disk space
