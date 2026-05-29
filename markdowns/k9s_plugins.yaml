@@ -1,0 +1,68 @@
+# /home/andre/.config/k9s/plugins.yaml
+plugins:
+
+  # 1. Dive: Inspect Docker/OCI image layers inside a selected container
+  # Requires 'dive' installed on your machine (https://github.com/wagoodman/dive)
+  # Go to container view -> Press 'd'
+  dive:
+    shortCut: d
+    description: "Dive image layers"
+    scopes:
+      - containers
+    command: dive
+    background: false
+    confirm: false
+    args:
+      - $COL-IMAGE
+
+  # 2. Netshoot: Spin up an ephemeral debugging container in a pod's network namespace
+  # Requires kubectl v1.30+ 
+  # Go to pods view -> Select pod -> Press 'Shift-D'
+  debug-container:
+    shortCut: Shift-D
+    description: "Add Netshoot debug container"
+    scopes:
+      - pods
+    command: kubectl
+    background: false
+    confirm: false
+    args:
+      - debug
+      - -it
+      - --context=$CONTEXT
+      - --namespace=$NAMESPACE
+      - $NAME
+      - --image=nicolaka/netshoot
+      - --
+      - zsh
+
+  # 3. Quick Node Shell: Jump into a node via a privileged pod (Great for K3s/Rancher hosts)
+  # Requires node-shell kubectl plugin or manually invoking a shell pod
+  # Go to nodes view -> Select node -> Press 'Shift-S'
+  node-shell:
+    shortCut: Shift-S
+    description: "Shell into Node"
+    scopes:
+      - nodes
+    command: kubectl
+    background: false
+    confirm: false
+    args:
+      - node-shell
+      - --context=$CONTEXT
+      - $NAME
+
+  # 4. Save Raw Logs: Instantly dumps the entire log history of a pod to a local file
+  # Go to pods view -> Select pod -> Press 'Ctrl-L'
+  log-full:
+    shortCut: Ctrl-L
+    description: "Export full pod logs to /tmp"
+    scopes:
+      - pods
+    command: bash
+    background: false
+    confirm: false
+    args:
+      - -c
+      - "kubectl logs --context=$CONTEXT -n $NAMESPACE $NAME --all-containers=true > /tmp/$NAME-full.log && echo 'Logs saved to /tmp/$NAME-full.log' && sleep 2"
+
